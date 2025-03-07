@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="research-common" />
+        <module name="research-quartz" />
+        <module name="research-generator" />
+        <module name="research-admin" />
+        <module name="research-framework" />
+        <module name="research-system" />
+        <module name="research-project" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zlz.project.mapper.ChangeMapper">
+    
+    <resultMap type="Change" id="ChangeResult">
+        <result property="changeId"    column="change_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="changeType"    column="change_type"    />
+        <result property="originalContent"    column="original_content"    />
+        <result property="modifiedContent"    column="modified_content"    />
+        <result property="applyUserId"    column="apply_user_id"    />
+        <result property="applyTime"    column="apply_time"    />
+        <result property="auditStatus"    column="audit_status"    />
+        <result property="approveTime"    column="approve_time"    />
+        <result property="auditComment"    column="audit_comment"    />
+    </resultMap>
+
+    <sql id="selectChangeVo">
+        select change_id, project_id, change_type, original_content, modified_content, apply_user_id, apply_time, audit_status, approve_time, audit_comment from pm_change
+    </sql>
+
+    <select id="selectChangeList" parameterType="Change" resultMap="ChangeResult">
+        <include refid="selectChangeVo"/>
+        <where>  
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="changeType != null  and changeType != ''"> and change_type = #{changeType}</if>
+            <if test="auditStatus != null  and auditStatus != ''"> and audit_status = #{auditStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectChangeByChangeId" parameterType="Long" resultMap="ChangeResult">
+        <include refid="selectChangeVo"/>
+        where change_id = #{changeId}
+    </select>
+
+    <insert id="insertChange" parameterType="Change">
+        insert into pm_change
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="changeId != null">change_id,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="changeType != null and changeType != ''">change_type,</if>
+            <if test="originalContent != null">original_content,</if>
+            <if test="modifiedContent != null and modifiedContent != ''">modified_content,</if>
+            <if test="applyUserId != null">apply_user_id,</if>
+            <if test="applyTime != null">apply_time,</if>
+            <if test="auditStatus != null and auditStatus != ''">audit_status,</if>
+            <if test="approveTime != null">approve_time,</if>
+            <if test="auditComment != null">audit_comment,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="changeId != null">#{changeId},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="changeType != null and changeType != ''">#{changeType},</if>
+            <if test="originalContent != null">#{originalContent},</if>
+            <if test="modifiedContent != null and modifiedContent != ''">#{modifiedContent},</if>
+            <if test="applyUserId != null">#{applyUserId},</if>
+            <if test="applyTime != null">#{applyTime},</if>
+            <if test="auditStatus != null and auditStatus != ''">#{auditStatus},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+            <if test="auditComment != null">#{auditComment},</if>
+         </trim>
+    </insert>
+
+    <update id="updateChange" parameterType="Change">
+        update pm_change
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="changeType != null and changeType != ''">change_type = #{changeType},</if>
+            <if test="originalContent != null">original_content = #{originalContent},</if>
+            <if test="modifiedContent != null and modifiedContent != ''">modified_content = #{modifiedContent},</if>
+            <if test="applyUserId != null">apply_user_id = #{applyUserId},</if>
+            <if test="applyTime != null">apply_time = #{applyTime},</if>
+            <if test="auditStatus != null and auditStatus != ''">audit_status = #{auditStatus},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+            <if test="auditComment != null">audit_comment = #{auditComment},</if>
+        </trim>
+        where change_id = #{changeId}
+    </update>
+
+    <delete id="deleteChangeByChangeId" parameterType="Long">
+        delete from pm_change where change_id = #{changeId}
+    </delete>
+
+    <delete id="deleteChangeByChangeIds" parameterType="String">
+        delete from pm_change where change_id in 
+        <foreach item="changeId" collection="array" open="(" separator="," close=")">
+            #{changeId}
+        </foreach>
+    </delete>
+</mapper>

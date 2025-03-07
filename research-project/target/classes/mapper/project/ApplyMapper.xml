@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zlz.project.mapper.ApplyMapper">
+    
+    <resultMap type="Apply" id="ApplyResult">
+        <result property="applyId"    column="apply_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="researchContent"    column="research_content"    />
+        <result property="expectedResult"    column="expected_result"    />
+        <result property="schedulePlan"    column="schedule_plan"    />
+        <result property="attachmentPath"    column="attachment_path"    />
+        <result property="submitTime"    column="submit_time"    />
+        <result property="version"    column="version"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectApplyVo">
+        select apply_id, project_id, research_content, expected_result, schedule_plan, attachment_path, submit_time, version, create_time from pm_apply
+    </sql>
+
+    <select id="selectApplyList" parameterType="Apply" resultMap="ApplyResult">
+        <include refid="selectApplyVo"/>
+        <where>  
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="submitTime != null "> and submit_time = #{submitTime}</if>
+            <if test="version != null "> and version = #{version}</if>
+        </where>
+    </select>
+    
+    <select id="selectApplyByApplyId" parameterType="Long" resultMap="ApplyResult">
+        <include refid="selectApplyVo"/>
+        where apply_id = #{applyId}
+    </select>
+
+    <insert id="insertApply" parameterType="Apply">
+        insert into pm_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">apply_id,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="researchContent != null and researchContent != ''">research_content,</if>
+            <if test="expectedResult != null and expectedResult != ''">expected_result,</if>
+            <if test="schedulePlan != null and schedulePlan != ''">schedule_plan,</if>
+            <if test="attachmentPath != null">attachment_path,</if>
+            <if test="submitTime != null">submit_time,</if>
+            <if test="version != null">version,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">#{applyId},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="researchContent != null and researchContent != ''">#{researchContent},</if>
+            <if test="expectedResult != null and expectedResult != ''">#{expectedResult},</if>
+            <if test="schedulePlan != null and schedulePlan != ''">#{schedulePlan},</if>
+            <if test="attachmentPath != null">#{attachmentPath},</if>
+            <if test="submitTime != null">#{submitTime},</if>
+            <if test="version != null">#{version},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateApply" parameterType="Apply">
+        update pm_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="researchContent != null and researchContent != ''">research_content = #{researchContent},</if>
+            <if test="expectedResult != null and expectedResult != ''">expected_result = #{expectedResult},</if>
+            <if test="schedulePlan != null and schedulePlan != ''">schedule_plan = #{schedulePlan},</if>
+            <if test="attachmentPath != null">attachment_path = #{attachmentPath},</if>
+            <if test="submitTime != null">submit_time = #{submitTime},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where apply_id = #{applyId}
+    </update>
+
+    <delete id="deleteApplyByApplyId" parameterType="Long">
+        delete from pm_apply where apply_id = #{applyId}
+    </delete>
+
+    <delete id="deleteApplyByApplyIds" parameterType="String">
+        delete from pm_apply where apply_id in 
+        <foreach item="applyId" collection="array" open="(" separator="," close=")">
+            #{applyId}
+        </foreach>
+    </delete>
+</mapper>
